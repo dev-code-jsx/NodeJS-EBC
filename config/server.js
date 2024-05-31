@@ -5,11 +5,13 @@ import express from 'express'
 import cors from 'cors'
 import helmet from "helmet" 
 import morgan from "morgan"
+import userRoutes from "../src/user/user.routes.js"
 
 class Server{
     constructor(){
         this.app = express()
         this.port = process.env.PORT || 3000
+        this.userPath = '/ebc/v1/user'
         
         this.conectarDB()
         this.middlewares()
@@ -32,6 +34,7 @@ class Server{
         this.app.get('/', (req, res) => {
             res.send('Hello World')
         })
+        this.app.use(this.userPath, userRoutes)
     }
 
     listen(){

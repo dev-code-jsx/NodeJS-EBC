@@ -27,7 +27,7 @@ const UserSchema = mongoose.Schema({
         default: 'USER'
     },
     dpi: {
-        type: number,
+        type: Number,
         required: true
     },
     address: {
@@ -35,7 +35,7 @@ const UserSchema = mongoose.Schema({
         required: true
     },
     phone: {
-        type: number,
+        type: Number,
         required: true
     },
     email: {
@@ -48,7 +48,7 @@ const UserSchema = mongoose.Schema({
         required: true
     },
     monthlyIncome:{
-        type: number,
+        type: Number,
         required: true
     },
     status: {
