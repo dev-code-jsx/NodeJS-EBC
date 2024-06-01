@@ -1,7 +1,7 @@
 import bcrypt from 'bcryptjs';
 import User from '../user/user.model.js';
 
-const generateRandomCode = () => {
+export const generateRandomCode = () => {
     const length = 6; // Define la longitud del código
     let code = '';
     for (let i = 0; i < length; i++) {
@@ -11,12 +11,12 @@ const generateRandomCode = () => {
     return code;
 };
 
-const isUniqueCodeUser = async (codeUser) => {
+export const isUniqueCodeUser = async (codeUser) => {
     const user = await User.findOne({ codeUser });
     return !user;
 };
 
-const generateUniqueCode = async () => {
+export const generateUniqueCode = async () => {
     let codeUser;
     let isUnique = false;
 
@@ -29,7 +29,7 @@ const generateUniqueCode = async () => {
     return codeUser;
 };
 
-const generateRandomPassword = (length = 8) => {
+export const generateRandomPassword = (length = 8) => {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let password = '';
     for (let i = 0; i < length; i++) {
@@ -38,24 +38,57 @@ const generateRandomPassword = (length = 8) => {
     return password;
 };
 
-export const validateAddUser = async (req, res, next) => {
-    try {
-        req.body.codeUser = await generateUniqueCode();
-        const password = generateRandomPassword();
-
-        const salt = bcrypt.genSaltSync();
-        req.body.password = bcrypt.hashSync(password, salt);
-
-        next();
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ msg: 'Error in middleware' });
+export const existEmail = async ( email = '') => {
+    const existenteEmail = await User.findOne({ email });
+    if (existenteEmail) {
+        throw new Error(`The email ${email} already exists`);
     }
-};
+}
 
-export const existUser = async ( username = '') => {
-    const existenteUser = await User.findOne({ username });
-    if (existenteUser) {
+export const existUsername = async ( username = '') => {
+    const existenteUsername = await User.findOne({ username });
+    if (existenteUsername) {
         throw new Error(`The user ${username} already exists`);
+    }
+}
+
+export const existName = async ( names = '') => {
+    const existenteName = await User.findOne({ names });
+    if (existenteName) {
+        throw new Error(`The name ${names} already exists`);
+    }
+}
+
+export const existLastName = async ( lastNames = '') => {
+    const existenteLastName = await User.findOne({ lastNames });
+    if (existenteLastName) {
+        throw new Error(`The last name ${lastNames} already exists`);
+    }
+}
+
+export const existDpi = async ( dpi = '') => {
+    const existenteDpi = await User.findOne({ dpi });
+    if (existenteDpi) {
+        throw new Error(`The dpi ${dpi} already exists`);
+    }
+}
+
+export const existPhone = async ( phone = '') => {
+    const existentePhone = await User.findOne({ phone });
+    if (existentePhone) {
+        throw new Error(`The phone ${phone} already exists`);
+    }
+}
+
+export const existAdress = async ( address = '') => {
+    const existenteAddress = await User.findOne({ address });
+    if (existenteAddress) {
+        throw new Error(`The address ${address} already exists`);
+    }
+}
+
+export const minMonthlyIncome = ( monthlyIncome = 0) => {
+    if (monthlyIncome < 100) {
+        throw new Error('The monthly income must be at least 100');
     }
 }
