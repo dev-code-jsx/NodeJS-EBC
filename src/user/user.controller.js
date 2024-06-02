@@ -26,7 +26,6 @@ export const addUser = async (req, res) => {
     });
 
     try {
-        // Guardar usuario en la base de datos
         await user.save();
 
         // Crear una cuenta para el usuario registrado
@@ -34,7 +33,7 @@ export const addUser = async (req, res) => {
         const account = new Account({
             idUser: user._id,
             accountNumber,
-            balance: 0 // Balance inicial predeterminado
+            balance: 0
         });
 
         // Guardar cuenta en la base de datos
