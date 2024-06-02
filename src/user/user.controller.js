@@ -39,7 +39,7 @@ export const addUser = async (req, res) => {
         // Guardar cuenta en la base de datos
         await account.save();
 
-        res.status(201).json({ msg: 'User and account created successfully', user, account });
+        res.status(201).json({ msg: 'User and account created successfully', user, account, password: req.plainPassword});
     } catch (error) {
         console.error(error);
         res.status(500).json({ msg: 'Error creating user or account' });
@@ -50,10 +50,12 @@ export const validateAddUser = async (req, res, next) => {
     try {
         minMonthlyIncome(req.body.monthlyIncome);
         req.body.codeUser = await generateUniqueCode();
-        const password = generateRandomPassword();
+
+        const plainPassword = generateRandomPassword();
+        req.plainPassword = plainPassword; 
 
         const salt = bcrypt.genSaltSync();
-        req.body.password = bcrypt.hashSync(password, salt);
+        req.body.password = bcrypt.hashSync(plainPassword, salt);
 
         next();
     } catch (e) {
