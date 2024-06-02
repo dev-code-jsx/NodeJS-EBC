@@ -2,13 +2,26 @@ import { Router } from 'express';
 import { check } from 'express-validator';
 import {
     addUser,
-    validateAddUser
+    validateAddUser,
+    getUsers
 } from '../user/user.controller.js';
 
-import { existUsername, existEmail, existName, existLastName, existDpi, existPhone, existAdress, minMonthlyIncome } from '../helpers/db-validators.js';
+import { 
+    existUsername,
+    existEmail,
+    existName,
+    existLastName,
+    existDpi,
+    existPhone,
+    existAdress,
+    minMonthlyIncome 
+} from '../helpers/db-validators.js';
+
 import { validateFields } from '../middlewares/validate-fields.js';
 
 const router = Router();
+
+router.get("/", getUsers);
 
 router.post(
     "/register",
@@ -28,8 +41,7 @@ router.post(
         check('email', 'The email is required').not().isEmpty(),
         check('email').custom(existEmail),
         check('job', 'The job is required').not().isEmpty(),
-        check('monthlyIncome', 'The monthlyIncome is required').not().isEmpty(),
-        check('monthlyIncome').custom(minMonthlyIncome),
+        check('monthlyIncome', 'The monthlyIncome is required').not().isEmpty().isNumeric(),
         validateFields
     ], validateAddUser, addUser)
 

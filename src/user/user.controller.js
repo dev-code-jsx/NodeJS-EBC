@@ -1,9 +1,11 @@
 import bcrypt from 'bcryptjs';
 import User from '../user/user.model.js';
-import { generateUniqueCode, generateRandomPassword } from '../helpers/db-validators.js';
+import Account from '../account/account.model.js';
+import { generateUniqueCode, generateRandomPassword, minMonthlyIncome} from '../helpers/db-validators.js';
 
 export const addUser = async (req, res) => {
-    const { codeUser,
+    const {
+        codeUser,
         password,
         username,
         names,
@@ -19,17 +21,35 @@ export const addUser = async (req, res) => {
     } = req.body;
 
     const user = new User({
-        codeUser, password, username, names, lastNames, role, 
-        dpi, address, phone, email, job, monthlyIncome, status 
+        codeUser, password, username, names, lastNames, role,
+        dpi, address, phone, email, job, monthlyIncome, status
     });
 
-    await user.save();
+    try {
+        // Guardar usuario en la base de datos
+        await user.save();
 
-    res.status(201).json({ msg: 'User created successfully', user });
-}
+        // Crear una cuenta para el usuario registrado
+        const accountNumber = Math.floor(Math.random() * 9000000000) + 1000000000; // Generar un número de cuenta aleatorio
+        const account = new Account({
+            idUser: user._id,
+            accountNumber,
+            balance: 0 // Balance inicial predeterminado
+        });
+
+        // Guardar cuenta en la base de datos
+        await account.save();
+
+        res.status(201).json({ msg: 'User and account created successfully', user, account });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ msg: 'Error creating user or account' });
+    }
+};
 
 export const validateAddUser = async (req, res, next) => {
     try {
+        minMonthlyIncome(req.body.monthlyIncome);
         req.body.codeUser = await generateUniqueCode();
         const password = generateRandomPassword();
 

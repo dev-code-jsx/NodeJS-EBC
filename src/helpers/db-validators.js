@@ -87,7 +87,7 @@ export const existAdress = async ( address = '') => {
     }
 }
 
-export const minMonthlyIncome = ( monthlyIncome = 0) => {
+export const minMonthlyIncome = (monthlyIncome) => {
     if (monthlyIncome < 100) {
         throw new Error('The monthly income must be at least 100');
     }
