@@ -70,6 +70,28 @@ export const validateAddUser = async (req, res, next) => {
     }
 };
 
+export const updateUser = async (req, res) => {
+    const { id} = req.params;
+    const {password, ...rest } = req.body;
+
+    if (password) {
+        const salt = bcrypt.genSaltSync();
+        rest.password = bcrypt.hashSync(password, salt);
+    }
+
+    try {
+        const user = await User.findByIdAndUpdate(id, rest);
+
+        res.status(200).json({ msg: 'User updated successfully', user });
+    } catch (e) {
+        console.error(e);
+        res.status(500).json({ msg: 'Error updating user' });
+    
+    }
+
+}
+
+
 
 export const getUsers = async (req, res) => {
     const users = await User.find();

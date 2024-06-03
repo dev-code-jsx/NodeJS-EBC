@@ -3,7 +3,8 @@ import { check } from 'express-validator';
 import {
     addUser,
     validateAddUser,
-    getUsers
+    getUsers,
+    updateUser
 } from '../user/user.controller.js';
 
 import { 
@@ -14,7 +15,7 @@ import {
     existDpi,
     existPhone,
     existAdress,
-    minMonthlyIncome 
+    minMonthlyIncome
 } from '../helpers/db-validators.js';
 
 import { validateFields } from '../middlewares/validate-fields.js';
@@ -45,5 +46,13 @@ router.post(
         check('type', 'The type is required').not().isEmpty(),
         validateFields
     ], validateAddUser, addUser)
+
+router.put(
+    "/update/:id",
+    [
+        check('id', 'The id is required').not().isEmpty(),
+        check('password', 'The password is required').isLength({ min: 8 }),
+        validateFields
+    ], updateUser)
 
 export default router;
