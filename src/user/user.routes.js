@@ -42,6 +42,7 @@ router.post(
         check('email').custom(existEmail),
         check('job', 'The job is required').not().isEmpty(),
         check('monthlyIncome', 'The monthlyIncome is required').not().isEmpty().isNumeric(),
+        check('type', 'The type is required').not().isEmpty(),
         validateFields
     ], validateAddUser, addUser)
 

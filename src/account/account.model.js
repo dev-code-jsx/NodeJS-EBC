@@ -1,11 +1,6 @@
 import mongoose from "mongoose";
 
 const AccountSchema = mongoose.Schema({
-    idUser: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
-        required: true,
-    },
     accountNumber: {
         type: Number,
         required: true,
@@ -13,6 +8,11 @@ const AccountSchema = mongoose.Schema({
     balance: {
         type: Number,
         default: 0,
+        required: true,
+    },
+    type: {
+        type: String,
+        enum: ['SAVING', 'MONETARY'],
         required: true,
     },
     favorite: [{

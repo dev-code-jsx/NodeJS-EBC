@@ -55,7 +55,11 @@ const UserSchema = mongoose.Schema({
         type: String,
         enum: ['ASSET', 'IDLE', 'DISABLED'],
         default: 'ASSET'
-    }
+    },
+    accountNumber: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Account"
+    },
 });
 
 export default mongoose.model('User', UserSchema);

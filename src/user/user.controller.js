@@ -17,27 +17,33 @@ export const addUser = async (req, res) => {
         email,
         job,
         monthlyIncome,
-        status
+        status,
+        type
     } = req.body;
-
-    const user = new User({
-        codeUser, password, username, names, lastNames, role,
-        dpi, address, phone, email, job, monthlyIncome, status
-    });
-
+    
+    
     try {
-        await user.save();
-
+        
         // Crear una cuenta para el usuario registrado
         const accountNumber = Math.floor(Math.random() * 9000000000) + 1000000000; // Generar un número de cuenta aleatorio
         const account = new Account({
-            idUser: user._id,
             accountNumber,
-            balance: 0
+            balance: 0,
+            type: type
         });
-
+        
         // Guardar cuenta en la base de datos
         await account.save();
+        const user = new User({
+            codeUser, password, username, names, lastNames, role,
+            dpi, address, phone, email, job, monthlyIncome, status
+        });
+
+        const cuenta = await Account.findOne({ accountNumber: accountNumber });
+        console.log(cuenta);
+        user.accountNumber = cuenta;
+        
+        await user.save();
 
         res.status(201).json({ msg: 'User and account created successfully', user, account, password: req.plainPassword});
     } catch (error) {
