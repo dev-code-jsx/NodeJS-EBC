@@ -10,7 +10,7 @@ import { validateFields } from '../middlewares/validate-fields.js';
 const router = Router();
 
 router.post(
-    "/add",
+    "/",
     [
         check('nameService', 'The nameService is required').not().isEmpty(),
         check('description', 'The description is required').not().isEmpty(),

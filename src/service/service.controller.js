@@ -1,4 +1,4 @@
-import Service from "../service/service.model";
+import Service from "../service/service.model.js";
 
 export const addService = async (req, res) => {
     const { nameService, description, price } = req.body;
