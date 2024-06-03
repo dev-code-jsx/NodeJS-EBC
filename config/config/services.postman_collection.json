@@ -1,0 +1,41 @@
+{
+	"info": {
+		"_postman_id": "20d86e98-20b2-43de-8501-076b90754120",
+		"name": "services",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "32791948"
+	},
+	"item": [
+		{
+			"name": "AddServices",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"nameService\": \"Compras en Siman\",\r\n    \"description\": \"En la compra de un producto de 500 en adeltante en Siman se aplica el 3% de descuento al usar tu tarjeta de EBC\",\r\n    \"price\": 500\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:3000/ebc/v1/service/",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"ebc",
+						"v1",
+						"service",
+						""
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
