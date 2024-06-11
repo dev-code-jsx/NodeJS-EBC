@@ -8,37 +8,30 @@ export const login = async (req, res) => {
     try {
         const user = await User.findOne({ codeUser });
 
-        if (!user) {
-            return res.status(400).json({
-                msg: 'Incorrect codeUser or password'
+        if (user && (await bcryptjs.compare(password, user.password))) {
+            const token = await generateJWT(user.id)
+
+            res.status(200).json({
+                msg: "Login Ok!!!",
+                userDetails: {
+                    id: user.id,
+                    token: token
+                },
             });
         }
 
-        if (!user.status) {
-            return res.status(400).json({
-                msg: 'User disabled'
-            });
+        if (!user) {
+            return res
+                .status(400)
+                .send(`Wrong credentials, ${codeUser} doesn't exists en database`);
         }
 
         const validPassword = bcryptjs.compareSync(password, user.password);
         if (!validPassword) {
-            return res.status(400).json({
-                msg: 'Incorrect codeUser or password'
-            });
+            return res.status(400).send("wrong password");
         }
-
-        const token = await generateJWT(user.id, user.codeUser);
-
-        res.json({
-            msg: 'Login success',
-            user,
-            token
-        })
-
     } catch (e) {
-        console.log(e);
-        res.status(500).json({
-            msg: 'Contact the administrator'
-        });
+        res.status(500).json({ msg: 'Comuniquese con el administrador' });
     }
 }
+
