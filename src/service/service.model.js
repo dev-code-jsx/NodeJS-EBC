@@ -18,3 +18,5 @@ const ServiceSchema = mongoose.Schema({
         ref: 'User'
     }
 });
+
+export default mongoose.model('Service', ServiceSchema);

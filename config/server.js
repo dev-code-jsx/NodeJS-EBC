@@ -7,12 +7,14 @@ import helmet from "helmet"
 import morgan from "morgan"
 import userRoutes from "../src/user/user.routes.js"
 import loginRoutes from "../src/auth/auth.routes.js"
+import serviceRoutes from "../src/service/service.routes.js"
 class Server{
     constructor(){
         this.app = express()
         this.port = process.env.PORT || 3000
         this.userPath = '/ebc/v1/user'
         this.loginPath = '/ebc/v1/login'
+        this.servicePath = '/ebc/v1/service'
         
         this.conectarDB()
         this.middlewares()
@@ -37,6 +39,7 @@ class Server{
         })
         this.app.use(this.userPath, userRoutes)
         this.app.use(this.loginPath, loginRoutes)
+        this.app.use(this.servicePath, serviceRoutes)
     }
 
     listen(){
