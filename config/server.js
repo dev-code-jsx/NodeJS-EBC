@@ -8,6 +8,7 @@ import morgan from "morgan"
 import userRoutes from "../src/user/user.routes.js"
 import loginRoutes from "../src/auth/auth.routes.js"
 import serviceRoutes from "../src/service/service.routes.js"
+import transactionRoutes from "../src/transaction/transaction.routes.js"
 import { adminExists } from "../src/user/user.controller.js"
 
 class Server{
@@ -17,7 +18,8 @@ class Server{
         this.userPath = '/ebc/v1/user'
         this.loginPath = '/ebc/v1/login'
         this.servicePath = '/ebc/v1/service'
-        
+        this.transactionPath = '/ebc/v1/transaction'
+
         this.conectarDB()
         this.middlewares()
         this.routes()
@@ -40,6 +42,7 @@ class Server{
         this.app.use(this.userPath, userRoutes)
         this.app.use(this.loginPath, loginRoutes)
         this.app.use(this.servicePath, serviceRoutes)
+        this.app.use(this.transactionPath, transactionRoutes)
     }
 
     listen(){

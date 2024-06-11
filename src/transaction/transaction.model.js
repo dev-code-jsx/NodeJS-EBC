@@ -15,22 +15,24 @@ const TransactionSchema = mongoose.Schema({
         default: Date.now
     },
     fromAccount: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Account'
+        type: Number,
+        required: true
     },
-    toAccount: [{
+    toAccount: {
         dpi: {
             type: Number,
             required: true
         },
         accountNumber: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Account'
+            type: Number,
+            required: true
         }
-    }],
+    },
     status: {
         type: String,
         enum: ['PENDING', 'COMPLETED', 'REVERTED'],
         default: 'PENDING'
     }
 });
+
+export default mongoose.model('Transaction', TransactionSchema);
