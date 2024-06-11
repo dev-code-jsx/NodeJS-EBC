@@ -33,7 +33,7 @@ router.post(
         check('names').custom(existName),
         check('lastNames', 'The lastNames is required').not().isEmpty(),
         check('lastNames').custom(existLastName),
-        check('dpi', 'The dpi is required').not().isLength({ min: 13 }),
+        check('dpi', 'The dpi is required').not().isEmpty(),
         check('dpi').custom(existDpi),
         check('address', 'The address is required').not().isEmpty(),
         check('address').custom(existAdress),        

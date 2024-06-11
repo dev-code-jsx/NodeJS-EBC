@@ -2,7 +2,9 @@ import { response } from 'express'
 import bcrypt from 'bcryptjs';
 import User from '../user/user.model.js';
 import Account from '../account/account.model.js';
-import { generateUniqueCode, generateRandomPassword, minMonthlyIncome} from '../helpers/db-validators.js';
+import nodemailer from 'nodemailer';
+import { generateUniqueCode, generateRandomPassword, minMonthlyIncome } from '../helpers/db-validators.js';
+import { config } from 'dotenv';
 
 export const addUser = async (req, res) => {
     const {
@@ -21,32 +23,105 @@ export const addUser = async (req, res) => {
         status,
         type
     } = req.body;
-    
-    
+
     try {
-        
-        // Crear una cuenta para el usuario registrado
         const accountNumber = Math.floor(Math.random() * 9000000000) + 1000000000; // Generar un número de cuenta aleatorio
         const account = new Account({
             accountNumber,
             balance: 0,
             type: type
         });
-        
-        // Guardar cuenta en la base de datos
+
         await account.save();
+
         const user = new User({
             codeUser, password, username, names, lastNames, role,
-            dpi, address, phone, email, job, monthlyIncome, status
+            dpi, address, phone, email, job, monthlyIncome, status,
+            accountNumber: account._id // Asociar cuenta con usuario
         });
 
-        const cuenta = await Account.findOne({ accountNumber: accountNumber });
-        console.log(cuenta);
-        user.accountNumber = cuenta;
-        
         await user.save();
 
-        res.status(201).json({ msg: 'User and account created successfully', user, account, password: req.plainPassword});
+        const config = {
+            host: 'smtp.gmail.com',
+            port: 587,
+            auth: {
+                user: "echamale018@gmail.com",
+                pass: process.env.PASS
+            }
+        };
+
+        const transport = nodemailer.createTransport(config);
+
+        const mensaje = {
+            from: 'echamale018@gmail.com',
+            to: email,
+            subject: 'Bienvenido a Easy Bank Code',
+            html: `
+            <!DOCTYPE html>
+            <html lang="en">
+            <head>
+                <meta charset="UTF-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <title>Bienvenido a Easy Bank Code</title>
+                <style>
+                    body {
+                        font-family: Arial, sans-serif;
+                        background-color: #f5f5f5;
+                        padding: 20px;
+                    }
+                    .container {
+                        max-width: 600px;
+                        margin: 0 auto;
+                        background-color: #fff;
+                        padding: 40px;
+                        border-radius: 8px;
+                        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+                    }
+                    h1 {
+                        color: #333;
+                    }
+                    p {
+                        color: #666;
+                    }
+                    .cta-button {
+                        display: inline-block;
+                        background-color: #007bff;
+                        color: #fff;
+                        text-decoration: none;
+                        padding: 10px 20px;
+                        border-radius: 5px;
+                        margin-top: 20px;
+                    }
+                    .cta-button:hover {
+                        background-color: #0056b3;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <h1>Bienvenido a Easy Bank Code</h1>
+                    <p>Hola ${names} ${lastNames},</p>
+                    <p>Tus credenciales son:</p>
+                    <ul>
+                        <li><strong>Usuario:</strong> ${codeUser}</li>
+                        <li><strong>Contraseña:</strong> ${req.plainPassword}</li>
+                    </ul>
+                    <p>Se recomienda que al ingresar por primera vez, cambies tu contraseña.</p>
+                    <a href="https://blog-k-35682.web.app/" class="cta-button">Iniciar Sesión</a>
+                    <p>Gracias por confiar en nosotros.</p>
+                    <img src="https://github.com/echamale-2022222/imagenes/blob/main/MicrosoftTeams-image.png?raw=true" alt="Easy Bank Code" style="max-width: 50px;">
+                </div>
+            </body>
+            </html>
+            `
+        };
+
+
+        const info = await transport.sendMail(mensaje);
+
+        res.status(201).json({ msg: 'User created and email sent', info });
+
     } catch (error) {
         console.error(error);
         res.status(500).json({ msg: 'Error creating user or account' });
@@ -59,7 +134,7 @@ export const validateAddUser = async (req, res, next) => {
         req.body.codeUser = await generateUniqueCode();
 
         const plainPassword = generateRandomPassword();
-        req.plainPassword = plainPassword; 
+        req.plainPassword = plainPassword;
 
         const salt = bcrypt.genSaltSync();
         req.body.password = bcrypt.hashSync(plainPassword, salt);
@@ -72,8 +147,8 @@ export const validateAddUser = async (req, res, next) => {
 };
 
 export const updateUser = async (req, res) => {
-    const { id} = req.params;
-    const {password, ...rest } = req.body;
+    const { id } = req.params;
+    const { password, ...rest } = req.body;
 
     if (password) {
         const salt = bcrypt.genSaltSync();
@@ -87,7 +162,7 @@ export const updateUser = async (req, res) => {
     } catch (e) {
         console.error(e);
         res.status(500).json({ msg: 'Error updating user' });
-    
+
     }
 
 }
@@ -96,6 +171,15 @@ export const getUsers = async (req, res) => {
     const users = await User.find();
 
     res.status(200).json(users);
+}
+
+
+export const adminExists = async (req, res) => {
+    const admin = await User.findOne({ codeUser: "ADMINB" });
+
+    if (!admin) {
+        adminD(res);
+    }
 }
 
 export const adminD = async (res = response) => {
@@ -116,12 +200,4 @@ export const adminD = async (res = response) => {
     });
 
     await adminDefault.save();
-}
-
-export const adminExists = async (req, res) => {
-    const admin = await User.findOne({ codeUser: "ADMINB" });
-
-    if (!admin) {
-        adminD(res);
-    }
 }

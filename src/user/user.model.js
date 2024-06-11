@@ -27,7 +27,7 @@ const UserSchema = mongoose.Schema({
         default: 'USER'
     },
     dpi: {
-        type: Number,
+        type: String,
         required: true
     },
     address: {
