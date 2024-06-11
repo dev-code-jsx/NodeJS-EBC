@@ -1,3 +1,4 @@
+import { response } from 'express'
 import bcrypt from 'bcryptjs';
 import User from '../user/user.model.js';
 import Account from '../account/account.model.js';
@@ -91,10 +92,36 @@ export const updateUser = async (req, res) => {
 
 }
 
-
-
 export const getUsers = async (req, res) => {
     const users = await User.find();
 
     res.status(200).json(users);
+}
+
+export const adminD = async (res = response) => {
+    const adminDefault = new User({
+        codeUser: "ADMINB",
+        password: bcrypt.hashSync("ADMINB", 10),
+        username: "ADMIN",
+        names: "ADMIN",
+        lastNames: "ADMIN",
+        role: "ADMIN",
+        dpi: 383992212,
+        address: "ADMIN",
+        phone: 12345678,
+        email: "admin@gmail.com",
+        job: "ADMIN",
+        monthlyIncome: 150,
+        status: "ASSET"
+    });
+
+    await adminDefault.save();
+}
+
+export const adminExists = async (req, res) => {
+    const admin = await User.findOne({ codeUser: "ADMINB" });
+
+    if (!admin) {
+        adminD(res);
+    }
 }

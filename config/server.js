@@ -8,6 +8,8 @@ import morgan from "morgan"
 import userRoutes from "../src/user/user.routes.js"
 import loginRoutes from "../src/auth/auth.routes.js"
 import serviceRoutes from "../src/service/service.routes.js"
+import { adminExists } from "../src/user/user.controller.js"
+
 class Server{
     constructor(){
         this.app = express()
@@ -23,6 +25,7 @@ class Server{
 
     async conectarDB(){
         await dbConnection()
+        await adminExists()
     }
 
     middlewares(){
@@ -34,9 +37,6 @@ class Server{
     }
 
     routes(){
-        this.app.get('/', (req, res) => {
-            res.send('Hello World')
-        })
         this.app.use(this.userPath, userRoutes)
         this.app.use(this.loginPath, loginRoutes)
         this.app.use(this.servicePath, serviceRoutes)
