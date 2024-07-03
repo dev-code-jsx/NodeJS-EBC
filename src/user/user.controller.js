@@ -25,7 +25,7 @@ export const addUser = async (req, res) => {
     } = req.body;
 
     try {
-        const accountNumber = Math.floor(Math.random() * 9000000000) + 1000000000; // Generar un número de cuenta aleatorio
+        const accountNumber = Math.floor(Math.random() * 9000000000) + 1000000000;
         const account = new Account({
             accountNumber,
             balance: 0,
@@ -37,7 +37,7 @@ export const addUser = async (req, res) => {
         const user = new User({
             codeUser, password, username, names, lastNames, role,
             dpi, address, phone, email, job, monthlyIncome, status,
-            accountNumber: account._id // Asociar cuenta con usuario
+            accountNumber: account._id
         });
 
         await user.save();

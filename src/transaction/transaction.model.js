@@ -32,6 +32,14 @@ const TransactionSchema = mongoose.Schema({
         type: String,
         enum: ['PENDING', 'COMPLETED', 'REVERTED'],
         default: 'PENDING'
+    },
+    reversible: {
+        type: Boolean,
+        default: true
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
     }
 });
 
