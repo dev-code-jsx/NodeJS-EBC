@@ -52,20 +52,6 @@ export const existUsername = async ( username = '') => {
     }
 }
 
-export const existName = async ( names = '') => {
-    const existenteName = await User.findOne({ names });
-    if (existenteName) {
-        throw new Error(`The name ${names} already exists`);
-    }
-}
-
-export const existLastName = async ( lastNames = '') => {
-    const existenteLastName = await User.findOne({ lastNames });
-    if (existenteLastName) {
-        throw new Error(`The last name ${lastNames} already exists`);
-    }
-}
-
 export const existDpi = async ( dpi = '') => {
     const existenteDpi = await User.findOne({ dpi });
     if (existenteDpi) {
@@ -77,13 +63,6 @@ export const existPhone = async ( phone = '') => {
     const existentePhone = await User.findOne({ phone });
     if (existentePhone) {
         throw new Error(`The phone ${phone} already exists`);
-    }
-}
-
-export const existAdress = async ( address = '') => {
-    const existenteAddress = await User.findOne({ address });
-    if (existenteAddress) {
-        throw new Error(`The address ${address} already exists`);
     }
 }
 
