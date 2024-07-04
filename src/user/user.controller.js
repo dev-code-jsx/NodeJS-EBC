@@ -5,6 +5,7 @@ import Account from '../account/account.model.js';
 import nodemailer from 'nodemailer';
 import { generateUniqueCode, generateRandomPassword, minMonthlyIncome } from '../helpers/db-validators.js';
 import { config } from 'dotenv';
+import accountModel from '../account/account.model.js';
 
 export const addUser = async (req, res) => {
     const {
@@ -167,12 +168,19 @@ export const updateUser = async (req, res) => {
 
 }
 
+//lista solo los usuarios con el rol de user
 export const getUsers = async (req, res) => {
-    const users = await User.find();
+    const users = await User.find({ role: "USER" });
 
     res.status(200).json(users);
 }
 
+//lista solo los usuarios con el rol de administrador
+export const getUsersAdmins = async (req, res) => {
+    const users = await User.find({ role: "ADMIN" });
+
+    res.status(200).json(users);
+}
 
 export const adminExists = async (req, res) => {
     const admin = await User.findOne({ codeUser: "ADMINB" });
@@ -200,4 +208,30 @@ export const adminD = async (res = response) => {
     });
 
     await adminDefault.save();
+}
+
+// solo para traer los detalles de la persona que esta logeada
+export const myDetails = async (req, res) => {
+    const user = req.user.uid;
+
+    const details = await User.findById(user);
+
+    const accountDetails = await accountModel.findOne({ accountNumber: details.accountNumber})
+
+    res.status(200).json({
+        details, accountDetails
+    })
+}
+
+// Funcion para el admin para que le muestre un usuario en especifico, es decir los detalles de solo uno....
+export const getUser = async (req, res) => {
+    const { id } = req.params;
+
+    const user = await User.findById(id);
+
+    const accountDetails = await accountModel.findOne({ accountNumber: details.accountNumber})
+
+    res.status(200).json({
+        user, accountDetails
+    })
 }

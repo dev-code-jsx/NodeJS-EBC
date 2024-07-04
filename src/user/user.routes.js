@@ -4,7 +4,10 @@ import {
     addUser,
     validateAddUser,
     getUsers,
-    updateUser
+    getUsersAdmins,
+    updateUser,
+    myDetails,
+    getUser
 } from '../user/user.controller.js';
 
 import { 
@@ -12,15 +15,15 @@ import {
     existEmail,
     existDpi,
     existPhone,
-    existAdress,
-    minMonthlyIncome
 } from '../helpers/db-validators.js';
-
 import { validateFields } from '../middlewares/validate-fields.js';
+import { validarJWT } from '../middlewares/validate-jwt.js'
 
 const router = Router();
 
-router.get("/", getUsers);
+router.get("/users", getUsers);
+
+router.get("/admins", getUsersAdmins);
 
 router.post(
     "/register",
@@ -32,14 +35,12 @@ router.post(
         check('dpi', 'The dpi is required').not().isEmpty(),
         check('dpi').custom(existDpi),
         check('address', 'The address is required').not().isEmpty(),
-        check('address').custom(existAdress),        
         check('phone', 'The phone is required').isLength({ min: 8 }),
         check('phone').custom(existPhone),
         check('email', 'The email is required').not().isEmpty(),
         check('email').custom(existEmail),
         check('job', 'The job is required').not().isEmpty(),
         check('monthlyIncome', 'The monthlyIncome is required').not().isEmpty().isNumeric(),
-        check('monthlyIncome').custom(minMonthlyIncome),
         check('type', 'The type is required').not().isEmpty(),
         validateFields
     ], validateAddUser, addUser)
@@ -51,5 +52,17 @@ router.put(
         check('password', 'The password is required').isLength({ min: 8 }),
         validateFields
     ], updateUser)
+
+router.get("/myDetails",
+    validarJWT,
+    myDetails
+)
+
+router.get("/detailsUser/:id",
+    [
+        check('id', 'This id is required').not().isEmpty(),
+    ], getUser)
+
+
 
 export default router;
