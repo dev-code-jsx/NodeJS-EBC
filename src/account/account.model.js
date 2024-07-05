@@ -39,6 +39,12 @@ const AccountSchema = mongoose.Schema({
             ref: "Transaction"
         }  
     }],
+    receivedDeposit: [{
+        idDeposit: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Deposit"
+        }  
+    }],
     createdAt: {
         type: Date,
         default: Date.now,

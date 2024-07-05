@@ -19,10 +19,6 @@ const TransactionSchema = mongoose.Schema({
         required: true
     },
     toAccount: {
-        dpi: {
-            type: Number,
-            required: true
-        },
         accountNumber: {
             type: Number,
             required: true

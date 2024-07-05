@@ -9,6 +9,7 @@ import userRoutes from "../src/user/user.routes.js"
 import loginRoutes from "../src/auth/auth.routes.js"
 import serviceRoutes from "../src/service/service.routes.js"
 import transactionRoutes from "../src/transaction/transaction.routes.js"
+import depositRoutes from '../src/deposit/deposit.routes.js'
 import { adminExists } from "../src/user/user.controller.js"
 
 class Server{
@@ -19,6 +20,7 @@ class Server{
         this.loginPath = '/ebc/v1/login'
         this.servicePath = '/ebc/v1/service'
         this.transactionPath = '/ebc/v1/transaction'
+        this.depositPath = '/ebc/v1/deposit'
 
         this.conectarDB()
         this.middlewares()
@@ -43,6 +45,7 @@ class Server{
         this.app.use(this.loginPath, loginRoutes)
         this.app.use(this.servicePath, serviceRoutes)
         this.app.use(this.transactionPath, transactionRoutes)
+        this.app.use(this.depositPath, depositRoutes)
     }
 
     listen(){
