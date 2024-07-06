@@ -8,7 +8,13 @@ const TransactionSchema = mongoose.Schema({
     },
     amount: {
         type: Number,
-        required: true
+        required: true,
+        validate: {
+            validator: function(value) {
+                return value <= 2000;
+            },
+            message: 'Transfer amount cannot exceed 2000 quetzales'
+        }
     },
     date: {
         type: Date,
@@ -19,10 +25,8 @@ const TransactionSchema = mongoose.Schema({
         required: true
     },
     toAccount: {
-        accountNumber: {
-            type: Number,
-            required: true
-        }
+        type: Number,
+        required: true
     },
     status: {
         type: String,
