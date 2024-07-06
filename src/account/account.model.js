@@ -20,9 +20,6 @@ const AccountSchema = mongoose.Schema({
             type: mongoose.Schema.Types.ObjectId,
             ref: "Account"
         },
-        dpi: {
-            type: Number
-        },
         alias: {
             type: String
         }

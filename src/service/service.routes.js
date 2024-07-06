@@ -15,6 +15,7 @@ router.post(
     "/addService",
     [
         validarJWT,
+        check('imagen', 'The imagen is required').not().isEmpty().isURL(),
         check('nameService', 'The nameService is required').not().isEmpty(),
         check('description', 'The description is required').not().isEmpty(),
         check('price', 'The price is required').not().isEmpty(),
@@ -27,6 +28,7 @@ router.get("/getService/:id", getService);
 
 router.put("/updateService/:id", [
     validarJWT,
+    check('imagen', 'The imagen is required').not().isEmpty().isURL(),
     check('nameService', 'The nameService is required').not().isEmpty(),
     check('description', 'The description is required').not().isEmpty(),
     check('price', 'The price is required').not().isEmpty(),

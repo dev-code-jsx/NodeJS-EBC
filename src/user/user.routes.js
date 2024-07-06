@@ -7,7 +7,8 @@ import {
     getUsersAdmins,
     updateUser,
     myDetails,
-    getUser
+    getUser,
+    editMyUser
 } from '../user/user.controller.js';
 
 import { 
@@ -52,6 +53,18 @@ router.put(
         check('password', 'The password is required').isLength({ min: 8 }),
         validateFields
     ], updateUser)
+
+router.put(
+    "/editMyUser",
+    [
+        validarJWT,
+        check('names', 'The names is required').not().isEmpty(),
+        check('lastNames', 'The lastNames is required').not().isEmpty(),
+        check('address', 'The address is required').not().isEmpty(),
+        check('job', 'The job is required').not().isEmpty(),
+        check('monthlyIncome', 'The monthlyIncome is required').not().isEmpty().isNumeric(),
+        validateFields
+    ], editMyUser)
 
 router.get("/myDetails",
     validarJWT,

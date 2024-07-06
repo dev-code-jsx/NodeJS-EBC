@@ -3,13 +3,13 @@ import userModel from "../user/user.model.js";
 import User from "../user/user.model.js";
 
 export const addService = async (req, res) => {
-    const { nameService, description, price } = req.body;
+    const {imagen, nameService, description, price } = req.body;
     const admin = req.user.uid;
 
     const adminExists = await User.findById(admin);
 
     try {
-        const service = new Service({ nameService, description, price, createdBy: adminExists._id });
+        const service = new Service({imagen, nameService, description, price, createdBy: adminExists._id });
 
         await service.save();
 
@@ -40,7 +40,7 @@ export const getService = async (req, res) => {
 
 export const updateService = async (req, res) => {
     const { id } = req.params;
-    const { nameService, description, price } = req.body;
+    const { imagen, nameService, description, price } = req.body;
     const admin = req.user.uid;
 
     const user = userModel.findOne({_id: admin});

@@ -175,13 +175,6 @@ export const getUsers = async (req, res) => {
     res.status(200).json(users);
 }
 
-//lista solo los usuarios con el rol de administrador
-export const getUsersAdmins = async (req, res) => {
-    const users = await User.find({ role: "ADMIN" });
-
-    res.status(200).json(users);
-}
-
 export const adminExists = async (req, res) => {
     const admin = await User.findOne({ codeUser: "ADMINB" });
 
@@ -229,9 +222,36 @@ export const getUser = async (req, res) => {
 
     const user = await User.findById(id);
 
-    const accountDetails = await accountModel.findOne({ accountNumber: details.accountNumber})
+    const accountDetails = await accountModel.findOne({ accountNumber: user.accountNumber})
 
     res.status(200).json({
         user, accountDetails
     })
+}
+
+// Funcion para que los usuarios editen solo su informacion
+export const editMyUser = async (req, res) => {
+    const user = req.user.uid;
+    const { names, lastNames, address, job, monthlyIncome } = req.body;
+
+    try {
+        const userExists = await User.findById(user);
+
+        if ( userExists._id !== user) {
+            res.status(401).json({ msg: 'You are not authorized to update this user' });
+        }
+
+        userExists.names = names;
+        userExists.lastNames = lastNames;
+        userExists.address = address;
+        userExists.job = job;
+        userExists.monthlyIncome = monthlyIncome;
+
+        await userExists.save();
+
+        res.status(200).json({ msg: 'User updated successfully', userExists });
+
+    } catch (e) {
+        res.status(500).json({ msg: e.message });
+    }
 }

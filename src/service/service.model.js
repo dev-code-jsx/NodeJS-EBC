@@ -1,6 +1,10 @@
 import mongoose from "mongoose";
 
 const ServiceSchema = mongoose.Schema({
+    imagen: {
+        type: String,
+        required: true
+    },
     nameService: {
         type: String,
         required: true
