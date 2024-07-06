@@ -4,7 +4,6 @@ import {
     addUser,
     validateAddUser,
     getUsers,
-    getUsersAdmins,
     updateUser,
     myDetails,
     getUser,
@@ -23,8 +22,6 @@ import { validarJWT } from '../middlewares/validate-jwt.js'
 const router = Router();
 
 router.get("/users", getUsers);
-
-router.get("/admins", getUsersAdmins);
 
 router.post(
     "/register",

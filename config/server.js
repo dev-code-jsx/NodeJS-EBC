@@ -11,6 +11,7 @@ import serviceRoutes from "../src/service/service.routes.js"
 import transactionRoutes from "../src/transaction/transaction.routes.js"
 import depositRoutes from '../src/deposit/deposit.routes.js'
 import accountRoutes from '../src/account/account.routes.js'
+import currencyRoutes from '../src/currency/currency.routes.js'
 import { adminExists } from "../src/user/user.controller.js"
 
 class Server{
@@ -23,6 +24,7 @@ class Server{
         this.transactionPath = '/ebc/v1/transaction'
         this.depositPath = '/ebc/v1/deposit'
         this.accountPath = '/ebc/v1/account'
+        this.currencyPath = '/ebc/v1/currency'
 
         this.conectarDB()
         this.middlewares()
@@ -49,6 +51,7 @@ class Server{
         this.app.use(this.transactionPath, transactionRoutes)
         this.app.use(this.depositPath, depositRoutes)
         this.app.use(this.accountPath, accountRoutes)
+        this.app.use(this.currencyPath, currencyRoutes)
     }
 
     listen(){
